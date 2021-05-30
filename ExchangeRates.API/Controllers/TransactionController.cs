@@ -19,7 +19,7 @@ namespace ExchangeRates.API.Controllers
         }
 
         [HttpGet]
-        [Route("[action]/{userId}:int")]
+        [Route("[action]/{userId:int}")]
         public void ListByUserId(int userId)
         {
             throw new NotImplementedException();

@@ -20,7 +20,7 @@ namespace ExchangeRates.API.Controllers
         }
 
         [HttpGet]
-        [Route("[action]/{email}:email")]
+        [Route("[action]/{email:email}")]
         public int Find(string email)
         {
             throw new NotImplementedException();
