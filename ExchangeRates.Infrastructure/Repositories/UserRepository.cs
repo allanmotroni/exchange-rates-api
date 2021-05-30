@@ -19,7 +19,7 @@ namespace ExchangeRates.Infrastructure.Repositories
             _logger = logger;
         }
 
-        public async Task<User> Create(User user)
+        public async Task Create(User user)
         {
             _logger.Info($"Creating user on Database. {user?.ToString()}");
 
@@ -27,8 +27,6 @@ namespace ExchangeRates.Infrastructure.Repositories
             await _databaseContext.SaveChangesAsync();
 
             _logger.Info($"User has been created on Database: {user?.ToString()}");
-
-            return user;
         }
 
         public async Task<User> GetById(int id)
@@ -44,7 +42,7 @@ namespace ExchangeRates.Infrastructure.Repositories
 
         public async Task<User> GetByEmail(string email)
         {
-            _logger.Info($"Getting user on Database by e-mail. {email}");
+            _logger.Info($"Getting user on Database by e-mail. Email: {email}");
 
             User user = await _databaseContext.User.FirstOrDefaultAsync(user => user.Email == email);
 

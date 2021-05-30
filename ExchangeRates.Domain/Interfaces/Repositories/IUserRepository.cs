@@ -6,7 +6,7 @@ namespace ExchangeRates.Domain.Interfaces.Repositories
 {
     public interface IUserRepository
     {
-        public Task<User> Create(User user);
+        public Task Create(User user);
 
         public Task<User> GetById(int id);
 
