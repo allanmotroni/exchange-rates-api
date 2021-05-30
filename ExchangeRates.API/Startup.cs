@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
 
 namespace ExchangeRates.API
 {
@@ -20,13 +19,13 @@ namespace ExchangeRates.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMySwagger();
+            services.AddCustomSwagger();
 
-            services.AddMyDependecyInjections();
+            services.AddCustomDependecyInjections();
 
-            services.AddMyDatabase(Configuration);
+            services.AddCustomDatabase(Configuration);
 
-            services.AddMyAutoMapper();
+            services.AddCustomAutoMapper();
 
             services.AddControllers();
         }
@@ -39,8 +38,6 @@ namespace ExchangeRates.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMySwagger();
-
             app.UseRouting();
 
             app.UseAuthorization();
@@ -49,6 +46,8 @@ namespace ExchangeRates.API
             {
                 endpoints.MapControllers();
             });
+
+            app.UseCustomSwagger();
         }
     }
 }
