@@ -1,16 +1,18 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ExchangeRates.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ExchangeRates.API.Configuration
 {
     public static class DatabaseConfiguration
     {
-        public static void AddMyDatabase(this IServiceCollection services)
+        public static void AddMyDatabase(this IServiceCollection services, IConfiguration configuration)
         {
-            throw new NotImplementedException();
+            var connection = configuration["DatabaseConnection:Sqlite"];
+            services.AddDbContext<DatabaseContext>(options => 
+                options.UseSqlite(connection)
+            );
         }
     }
 }
