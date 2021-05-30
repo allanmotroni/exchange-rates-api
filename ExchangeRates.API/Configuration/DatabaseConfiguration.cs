@@ -7,7 +7,7 @@ namespace ExchangeRates.API.Configuration
 {
     public static class DatabaseConfiguration
     {
-        public static void AddMyDatabase(this IServiceCollection services, IConfiguration configuration)
+        public static void AddCustomDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             var connection = configuration["DatabaseConnection:Sqlite"];
             services.AddDbContext<DatabaseContext>(options => 
