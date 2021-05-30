@@ -1,13 +1,7 @@
 ﻿using ExchangeRates.Domain.Dto;
-using ExchangeRates.Domain.DTO;
-using ExchangeRates.Domain.Entities;
-using Microsoft.AspNetCore.Http;
+using ExchangeRates.Domain.Interfaces.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 
 namespace ExchangeRates.API.Controllers
@@ -17,27 +11,33 @@ namespace ExchangeRates.API.Controllers
     public class UserController : MyControllerBase
     {
         protected readonly ILogger _logger;
-        public UserController(ILogger<MyControllerBase> logger)
+        protected readonly IUserService _userService;
+        public UserController(ILogger<MyControllerBase> logger, IUserService userService)
         {
             _logger = logger;
+            _userService = userService;
         }
 
         [HttpPost]
         [Route("[action]")]
-        public IActionResult Create([FromBody]NewUserDto newUser)
+        public async Task<IActionResult> Create([FromBody]NewUserDto newUserDto)
         {
-            _logger.LogInformation($"Creating a new User: {newUser}");
+            _logger.LogInformation($"Creating a new User: {newUserDto}");
 
-            return CustomReponse(new UserDto());
+            UserDto userDto =await _userService.Create(newUserDto);
+
+            return CustomReponse(userDto);
         }
 
         [HttpGet]
         [Route("[action]/{email}")]
-        public IActionResult Find(string email)
+        public async Task<IActionResult> FindByEmail(string email)
         {
-            _logger.LogInformation($"Finding an User by Email param: {email}");
+            _logger.LogInformation($"Finding an User by Email: {email}");
 
-            return CustomReponse(new UserDto());
+            UserDto userDto = await _userService.FindByEmail(email);
+
+            return CustomReponse(userDto);
         }
     }
 }
