@@ -5,7 +5,7 @@ namespace ExchangeRates.API.Configuration
 {
     public static class AutoMapperConfiguration
     {
-        public static void AddMyAutoMapper(this IServiceCollection services)
+        public static void AddCustomAutoMapper(this IServiceCollection services)
         {
             services.AddAutoMapper(typeof(AutoMapperSetup));
         }
