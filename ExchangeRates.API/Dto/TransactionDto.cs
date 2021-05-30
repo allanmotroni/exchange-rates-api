@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ExchangeRates.Domain.Dto
+namespace ExchangeRates.Domain.API
 {
     public class TransactionDto
     {
@@ -14,5 +10,10 @@ namespace ExchangeRates.Domain.Dto
         public double ToCurrency { get; set; }
         public double Rate { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public override string ToString()
+        {
+            return $"UserId: {UserId} - FromCurrency: {FromCurrency} - FromValue: {FromValue} - ToCurrency: {ToCurrency} - Rate: {Rate} - CreatedAt: {CreatedAt}";
+        }
     }
 }
