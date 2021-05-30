@@ -21,6 +21,13 @@ namespace ExchangeRates.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMySwagger();
+
+            services.AddMyDependecyInjections();
+
+            services.AddMyDatabase(Configuration);
+
+            services.AddMyAutoMapper();
+
             services.AddControllers();
         }
 

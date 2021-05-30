@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ExchangeRates.Domain.Interfaces.Repositories;
+using ExchangeRates.Domain.Interfaces.Services;
+using ExchangeRates.Domain.Services;
+using ExchangeRates.Infrastructure.Repositories;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ExchangeRates.API.Configuration
 {
@@ -10,6 +10,8 @@ namespace ExchangeRates.API.Configuration
     {
         public static void AddMyDependecyInjections(this IServiceCollection services)
         {
+            services.AddScoped<IUserService, UserService>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
         }
     }
