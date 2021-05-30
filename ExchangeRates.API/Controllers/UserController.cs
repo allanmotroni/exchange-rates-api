@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ExchangeRates.Domain.API;
+using ExchangeRates.API;
 using ExchangeRates.Domain.Entities;
 using ExchangeRates.Domain.Interfaces.Logger;
 using ExchangeRates.Domain.Interfaces.Services;

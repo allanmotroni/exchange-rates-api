@@ -17,7 +17,13 @@ namespace ExchangeRates.API.Configuration
 
             services.AddScoped<IUserService, UserService>();
 
+            services.AddScoped<IExchangeTransactionService, ExchangeTransactionService>();
+
             services.AddTransient<IUserRepository, UserRepository>();
+
+            services.AddTransient<ITransactionRepository, TransactionRepository>();
+
+            services.AddTransient<IExchangeRateRepository, ExchangeRateRepository>();
 
             services.AddScoped<ICustomValidator, Validator>();
 

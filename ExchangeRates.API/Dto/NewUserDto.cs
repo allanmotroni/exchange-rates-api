@@ -1,4 +1,4 @@
-﻿namespace ExchangeRates.Domain.API
+﻿namespace ExchangeRates.API
 {
     public class NewUserDto
     {
