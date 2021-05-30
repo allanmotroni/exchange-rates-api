@@ -1,7 +1,12 @@
-﻿using ExchangeRates.Domain.Dto;
+﻿using AutoMapper;
+using ExchangeRates.Domain.API;
+using ExchangeRates.Domain.Entities;
+using ExchangeRates.Domain.Interfaces.Logger;
 using ExchangeRates.Domain.Interfaces.Services;
+using ExchangeRates.Domain.Validations;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ExchangeRates.API.Controllers
@@ -10,34 +15,81 @@ namespace ExchangeRates.API.Controllers
     [ApiController]
     public class UserController : MyControllerBase
     {
-        protected readonly ILogger _logger;
-        protected readonly IUserService _userService;
-        public UserController(ILogger<MyControllerBase> logger, IUserService userService)
+        private readonly IUserService _userService;
+        private readonly IMapper _mapper;
+
+        public UserController(IUserService userService, IMapper mapper, ICustomValidator customValidator, ICustomLogger logger)
+            : base(customValidator, logger)
         {
-            _logger = logger;
             _userService = userService;
+            _mapper = mapper;
         }
 
         [HttpPost]
         [Route("[action]")]
-        public async Task<IActionResult> Create([FromBody]NewUserDto newUserDto)
+        public async Task<IActionResult> Create([FromBody] NewUserDto newUserDto)
         {
-            _logger.LogInformation($"Creating a new User: {newUserDto}");
+            try
+            {
+                _logger.Info($"Creating a new User: {newUserDto}");
 
-            UserDto userDto =await _userService.Create(newUserDto);
+                User user = _mapper.Map<User>(newUserDto);
+                await _userService.Create(user);
 
-            return CustomReponse(userDto);
+                UserDto userDto = null;
+                if (IsValid)
+                    userDto = _mapper.Map<UserDto>(user);
+
+                return CustomReponse(userDto);
+            }
+            catch (Exception exception)
+            {
+                return CustomExceptionResponse(exception);
+            }
         }
 
         [HttpGet]
         [Route("[action]/{email}")]
         public async Task<IActionResult> FindByEmail(string email)
         {
-            _logger.LogInformation($"Finding an User by Email: {email}");
+            try
+            {
+                _logger.Info($"Finding an User by Email: {email}");
 
-            UserDto userDto = await _userService.FindByEmail(email);
+                User user = await _userService.FindByEmail(email);
 
-            return CustomReponse(userDto);
+                UserDto userDto = null;
+                if (IsValid)
+                    userDto = _mapper.Map<UserDto>(user);
+
+                return CustomReponse(userDto);
+            }
+            catch (Exception exception)
+            {
+                return CustomExceptionResponse(exception);
+            }
+        }
+
+        [HttpGet]
+        [Route("[action]")]
+        public async Task<IActionResult> FindAll()
+        {
+            try
+            {
+                _logger.Info($"Finding all Users");
+
+                IEnumerable<User> users = await _userService.FindAll();
+
+                IEnumerable<UserDto> usersDto = null;
+                if (IsValid)
+                    usersDto = _mapper.Map<IEnumerable<UserDto>>(users);
+
+                return CustomReponse(usersDto);
+            }
+            catch (Exception exception)
+            {
+                return CustomExceptionResponse(exception);
+            }
         }
     }
 }

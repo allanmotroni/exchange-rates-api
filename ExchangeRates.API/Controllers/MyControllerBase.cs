@@ -1,51 +1,54 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using ExchangeRates.Domain.Interfaces.Logger;
+using ExchangeRates.Domain.Validations;
+using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 
 namespace ExchangeRates.API.Controllers
 {
-    public class MyControllerBase : ControllerBase
-    {        
+    public abstract class MyControllerBase : ControllerBase
+    {
+        protected readonly ICustomValidator _customValidator;
+        protected readonly ICustomLogger _logger;
+        protected MyControllerBase(ICustomValidator customValidator, ICustomLogger logger)
+        {
+            _customValidator = customValidator;
+            _logger = logger;
+        }
+
         public IActionResult CustomReponse<T>(T returnedObject)
         {
-            try
-            {
-                if (IsValid())
-                    return CustomSuccessResponse(returnedObject);
-                else
-                    return CustomBadRequestResponse();
-            }
-            catch (Exception ex)
-            {
-                return CustomExceptionResponse();
-            }
+            if (IsValid)
+                return CustomSuccessResponse(returnedObject);
+            else
+                return CustomBadRequestResponse();
         }
 
         private IActionResult CustomBadRequestResponse()
         {
+            _logger.Warn($"{_customValidator.GetStringValidations()}");
+
             return BadRequest(new
             {
                 success = false,
-                message = ""
+                messages = _customValidator.GetValidations()
             });
         }
 
-        private IActionResult CustomExceptionResponse()
+        protected IActionResult CustomExceptionResponse(Exception ex)
         {
+            _logger.Exception(ex);
 
             return BadRequest(new
             {
                 success = false,
-                message = "Please try again later."
+                message = "An error has occured while trying to proccess this request."
             });
         }
 
         private IActionResult CustomSuccessResponse<T>(T returnedObject)
-        {            
+        {
+            _logger.Info($"{returnedObject?.ToString()}");
+
             return Ok(new
             {
                 success = true,
@@ -53,9 +56,12 @@ namespace ExchangeRates.API.Controllers
             });
         }
 
-        private bool IsValid()
+        public bool IsValid
         {
-            return true;
+            get
+            {
+                return !_customValidator.HasErrors();
+            }
         }
     }
 }

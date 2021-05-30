@@ -1,10 +1,8 @@
-﻿using ExchangeRates.Domain.Dto;
-using Microsoft.AspNetCore.Http;
+﻿using ExchangeRates.Domain.API;
+using ExchangeRates.Domain.Interfaces.Logger;
+using ExchangeRates.Domain.Validations;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ExchangeRates.API.Controllers
 {
@@ -12,6 +10,9 @@ namespace ExchangeRates.API.Controllers
     [ApiController]
     public class TransactionController : MyControllerBase
     {
+        protected TransactionController(ICustomValidator customValidator, ICustomLogger logger)
+            : base(customValidator, logger) { }
+
         [HttpPost]
         [Route("[action]")]
         public IActionResult Convert([FromBody] NewTransactionDto newTransaction)
