@@ -1,10 +1,9 @@
-﻿using AutoMapper;
-using ExchangeRates.Domain.Dto;
-using ExchangeRates.Domain.Entities;
+﻿using ExchangeRates.Domain.Entities;
+using ExchangeRates.Domain.Interfaces.Logger;
 using ExchangeRates.Domain.Interfaces.Repositories;
 using ExchangeRates.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ExchangeRates.Infrastructure.Repositories
@@ -12,39 +11,53 @@ namespace ExchangeRates.Infrastructure.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly DatabaseContext _databaseContext;
-        private readonly IMapper _mapper;
-        public UserRepository(DatabaseContext databaseContext, IMapper mapper)
+        private readonly ICustomLogger _logger;
+
+        public UserRepository(DatabaseContext databaseContext, ICustomLogger logger)
         {
             _databaseContext = databaseContext;
-            _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<UserDto> Create(NewUserDto newUserDto)
+        public async Task<User> Create(User user)
         {
-            User user = _mapper.Map<User>(newUserDto);
-            
+            _logger.Info($"Creating user on Database. {user?.ToString()}");
+
             await _databaseContext.User.AddAsync(user);
             await _databaseContext.SaveChangesAsync();
-            
-            UserDto userDto = _mapper.Map<UserDto>(user);
-            return userDto;
+
+            _logger.Info($"User has been created on Database: {user?.ToString()}");
+
+            return user;
         }
 
-        public async Task<UserDto> GetById(int id)
-        {            
+        public async Task<User> GetById(int id)
+        {
+            _logger.Info($"Getting user on Database by id. {id}");
+
             User user = await _databaseContext.User.FirstOrDefaultAsync(user => user.UserId == id);
 
-            UserDto userDto = _mapper.Map<UserDto>(user);
-            return userDto;
+            _logger.Info($"Got user on Database: {user?.ToString()}");
+
+            return user;
         }
 
-        public async Task<UserDto> GetByEmail(string email)
+        public async Task<User> GetByEmail(string email)
         {
+            _logger.Info($"Getting user on Database by e-mail. {email}");
+
             User user = await _databaseContext.User.FirstOrDefaultAsync(user => user.Email == email);
 
-            UserDto userDto = _mapper.Map<UserDto>(user);
-            return userDto;
+            return user;
         }
 
+        public async Task<IList<User>> GetAll()
+        {
+            _logger.Info($"Getting all users on Database.");
+
+            IList<User> users = await _databaseContext.User.ToListAsync();
+
+            return users;
+        }
     }
 }

@@ -1,17 +1,16 @@
-﻿using ExchangeRates.Domain.Dto;
-using System;
+﻿using ExchangeRates.Domain.Entities;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ExchangeRates.Domain.Interfaces.Services
 {
     public interface IUserService
     {
-        public Task<UserDto> Create(NewUserDto newUserDto);
+        public Task Create(User user);
 
-        public Task<UserDto> FindByEmail(string email);
-        
+        public Task<User> FindByEmail(string email);
+
+        public Task<IEnumerable<User>> FindAll();
+
     }
 }

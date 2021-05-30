@@ -1,36 +1,63 @@
-﻿using ExchangeRates.Domain.Dto;
+﻿using ExchangeRates.Domain.Entities;
+using ExchangeRates.Domain.Entities.Validations;
 using ExchangeRates.Domain.Interfaces.Repositories;
 using ExchangeRates.Domain.Interfaces.Services;
+using ExchangeRates.Domain.Validations;
+using FluentValidation;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ExchangeRates.Domain.Services
 {
-    public class UserService: IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        public UserService(IUserRepository userRepository)
+        private readonly ValidationService _validationService;
+        private readonly ICustomValidator _customValidator;
+        
+        public UserService(IUserRepository userRepository, ValidationService validationService, ICustomValidator customValidator)
         {
             _userRepository = userRepository;
+            _validationService = validationService;
+            _customValidator = customValidator;            
         }
 
-        public async Task<UserDto> Create(NewUserDto newUserDto)
+        public async Task Create(User user)
         {
-            UserDto userDto = await _userRepository.Create(newUserDto);
-            return userDto;
+            _validationService.Validate(user, new CreateUserValidation());
+            if (!_customValidator.HasErrors())
+            {
+                User userCreated = await _userRepository.GetByEmail(user.Email);
+                if (userCreated != null)
+                    _customValidator.Notify($"E-mail already registered. {user.Email}");
+
+                await _userRepository.Create(user);
+            }
         }
 
-        public async Task<UserDto> FindByEmail(string email)
+        public async Task<User> FindByEmail(string email)
         {
-            ValidateEmail(email);
+            User user = null;
 
-            UserDto userDto = await _userRepository.GetByEmail(email);
-            
-            return userDto;
+            _validationService.Validate<string, AbstractValidator<string>>(email, new CustomStringValidation());
+            if (!_customValidator.HasErrors())
+            {
+                user = await _userRepository.GetByEmail(email);
+                if (user == null)
+                    _customValidator.Notify("User not found.");
+            }
+
+            return user;
         }
 
-        private bool ValidateEmail(string email)
+        public async Task<IEnumerable<User>> FindAll()
         {
-            return true;
+            IList<User> users = await _userRepository.GetAll();
+            if (users.Count == 0)
+                _customValidator.Notify("No Users were found in Database.");
+
+            return users;
         }
+
     }
 }

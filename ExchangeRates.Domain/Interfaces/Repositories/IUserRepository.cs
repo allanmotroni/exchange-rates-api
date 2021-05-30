@@ -1,14 +1,17 @@
-﻿using ExchangeRates.Domain.Dto;
+﻿using ExchangeRates.Domain.Entities;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace ExchangeRates.Domain.Interfaces.Repositories
 {
     public interface IUserRepository
     {
-        public Task<UserDto> Create(NewUserDto newUserDto);
+        public Task<User> Create(User user);
 
-        public Task<UserDto> GetById(int id);
+        public Task<User> GetById(int id);
 
-        public Task<UserDto> GetByEmail(string email);
+        public Task<User> GetByEmail(string email);
+
+        public Task<IList<User>> GetAll();
     }
 }
