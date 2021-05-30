@@ -14,12 +14,12 @@ namespace ExchangeRates.Domain.Services
         private readonly IUserRepository _userRepository;
         private readonly ValidationService _validationService;
         private readonly ICustomValidator _customValidator;
-        
+
         public UserService(IUserRepository userRepository, ValidationService validationService, ICustomValidator customValidator)
         {
             _userRepository = userRepository;
             _validationService = validationService;
-            _customValidator = customValidator;            
+            _customValidator = customValidator;
         }
 
         public async Task Create(User user)
@@ -28,10 +28,14 @@ namespace ExchangeRates.Domain.Services
             if (!_customValidator.HasErrors())
             {
                 User userCreated = await _userRepository.GetByEmail(user.Email);
-                if (userCreated != null)
+                if (userCreated == null)
+                {
+                    await _userRepository.Create(user);
+                }
+                else
+                {
                     _customValidator.Notify($"E-mail already registered. {user.Email}");
-
-                await _userRepository.Create(user);
+                }
             }
         }
 
