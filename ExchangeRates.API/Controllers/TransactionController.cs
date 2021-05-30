@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ExchangeRates.Domain.Dto;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,20 +10,20 @@ namespace ExchangeRates.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TransactionController : ControllerBase
+    public class TransactionController : MyControllerBase
     {
         [HttpPost]
         [Route("[action]")]
-        public void Convert()
+        public IActionResult Convert([FromBody] NewTransactionDto newTransaction)
         {
-            throw new NotImplementedException();
+            return CustomReponse(new TransactionDto());
         }
 
         [HttpGet]
         [Route("[action]/{userId:int}")]
-        public void ListByUserId(int userId)
+        public IActionResult ListByUserId(int userId)
         {
-            throw new NotImplementedException();
+            return CustomReponse<IEnumerable<TransactionDto>>(new List<TransactionDto>());
         }
     }
 }
