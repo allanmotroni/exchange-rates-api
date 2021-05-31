@@ -5,8 +5,19 @@ API service that convert currencies based on EUR
 
 ### Visual Studio
 
+**IIS Express**
 Just open the solution file: ExchangeRates.sln.
 Choose the IIS Express profile and press F5 or click in the green play icon at the Visual Studio Toolbar.
+
+**Container**
+Just open the solution file: ExchangeRates.sln.
+Choose the Docker profile and press F5 or click in the green play icon at the Visual Studio Toolbar.
+
+### Docker
+
+Run the terminal and type
+docker build .
+docker run -it --rm -p 8081:80 <name>
 
 To have access access the endpoint below: 
 /api/User/Create
