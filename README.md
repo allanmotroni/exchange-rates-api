@@ -1,14 +1,14 @@
 # exchange-rates-api
 API service that convert currencies based on EUR
 
-##Running the .NET API Application
+## Running the .NET API Application
 
-###Visual Studio
+### Visual Studio
 
-Just open the solution file: ExchangeRates.sln
-Choose the IIS Express profile and click Play
+Just open the solution file: ExchangeRates.sln.
+Choose the IIS Express profile and press F5 or click in the green play icon at the Visual Studio Toolbar.
 
-##Project porpose
+## Project porpose
 
 This API project meaning is to make available the latest Exchange Rate based on EUR to other currencies, passing the destination currency and value the API return the destination value in the currency passed.
 
