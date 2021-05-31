@@ -28,6 +28,8 @@ namespace ExchangeRates.API
             services.AddCustomAutoMapper();
 
             services.AddControllers();
+
+            services.AddCustomKissLog(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +43,8 @@ namespace ExchangeRates.API
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCustomKissLog(Configuration);
 
             app.UseEndpoints(endpoints =>
             {
