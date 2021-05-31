@@ -8,6 +8,17 @@ API service that convert currencies based on EUR
 Just open the solution file: ExchangeRates.sln.
 Choose the IIS Express profile and press F5 or click in the green play icon at the Visual Studio Toolbar.
 
+To have access access the endpoint below: 
+/api/User/Create
+
+You need to pass the **name** and **email** to get an Id.
+
+Get the Id and access the endpoint below:
+/api/Transaction/Convert
+
+You can get all transactions you have done by endpoint below:
+/api/Transaction/ListByUserId/{userId}
+
 ## Project porpose
 
 This API project meaning is to make available the latest Exchange Rate based on EUR to other currencies, passing the destination currency and value the API return the destination value in the currency passed.
@@ -48,3 +59,6 @@ The main layer, who get the application bussines rules.
 
 **Infraestructure**
 The layer responsible to access repositories like external API and database access.
+
+## Heroku
+https://exchange-rates-api-final.herokuapp.com/swagger/index.html
