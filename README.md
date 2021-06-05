@@ -30,7 +30,7 @@ Get the Id and access the endpoint below:
 You can get all transactions you have done by endpoint below:
 /api/Transaction/ListByUserId/{userId}
 
-## Project porpose
+## Project purpose
 
 This API project meaning is to make available the latest Exchange Rate based on EUR to other currencies, passing the destination currency and value the API return the destination value in the currency passed.
 
