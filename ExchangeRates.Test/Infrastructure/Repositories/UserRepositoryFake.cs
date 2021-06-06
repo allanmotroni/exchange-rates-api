@@ -24,7 +24,7 @@ namespace ExchangeRates.Test.Infrastructure.Repositories
 
         private IList<User> LoadFakeUsers()
         {
-            IList<User> users = new List<User>()
+            users = new List<User>()
             {
                 new User{ UserId = GetNextUserId(), Active = true, CreatedAt = DateTime.Now, Email = $"email{idCounter}@email.com", Name = "User "+ idCounter },
                 new User{ UserId = GetNextUserId(), Active = true, CreatedAt = DateTime.Now, Email = $"email{idCounter}@email.com", Name = "User "+ idCounter },
