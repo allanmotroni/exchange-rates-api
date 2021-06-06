@@ -2,7 +2,7 @@
 
 namespace ExchangeRates.Infrastructure.Extension
 {
-    public static class JsonExtention
+    public static class JsonExtension
     {
         public static T ToClassOf<T>(this string json)
         {
