@@ -44,7 +44,7 @@ namespace ExchangeRates.Domain.Services
             }
         }
 
-        public async Task<IEnumerable<Transaction>> ListByUserId(int userId)
+        public async Task<IList<Transaction>> ListByUserId(int userId)
         {
             IList<Transaction> transactions = null;
 

@@ -8,6 +8,6 @@ namespace ExchangeRates.Domain.Interfaces.Services
     {
         public Task Convert(Transaction transaction);
 
-        public Task<IEnumerable<Transaction>> ListByUserId(int userId);
+        public Task<IList<Transaction>> ListByUserId(int userId);
     }
 }
