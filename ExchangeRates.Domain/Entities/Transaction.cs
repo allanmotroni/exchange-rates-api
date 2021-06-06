@@ -13,5 +13,17 @@ namespace ExchangeRates.Domain.Entities
         public double ToValue { get; set; }
         public double Rate { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public bool CalculateRate(double rate)
+        {
+            if (rate > 0)
+            {
+                Rate = rate;
+                ToValue = FromValue * rate;
+                return true;
+            }
+
+            return false;
+        }
     }
 }
