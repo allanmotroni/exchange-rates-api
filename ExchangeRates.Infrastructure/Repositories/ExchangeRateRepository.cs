@@ -3,11 +3,11 @@ using ExchangeRates.Domain.Interfaces.Repositories;
 using ExchangeRates.Domain.Validations;
 using ExchangeRates.Infrastructure.Dto;
 using ExchangeRates.Infrastructure.Extension;
+using ExchangeRates.Infrastructure.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace ExchangeRates.Infrastructure.Repositories
@@ -17,18 +17,20 @@ namespace ExchangeRates.Infrastructure.Repositories
         private readonly ICustomValidator _customValidator;
         private readonly ICustomLogger _logger;
         private readonly IConfiguration _configuration;
-        public ExchangeRateRepository(ICustomValidator customValidator, ICustomLogger logger, IConfiguration configuration)
+        private readonly IPostService _postService;
+        public ExchangeRateRepository(ICustomValidator customValidator, ICustomLogger logger, IConfiguration configuration, IPostService postService)
         {
             _customValidator = customValidator;
             _logger = logger;
             _configuration = configuration;
+            _postService = postService;
         }
 
         public async Task<double> GetExchangeRate(string fromCurrency, string toCurrency)
         {
             double rate = 0;
             string endpoint = ConfigureEndpoint(fromCurrency, toCurrency);
-            string json = await GetExchangeRatesAPI(endpoint);
+            string json = await _postService.Post(endpoint);
 
             ExchangeRatesDto exchangeRatesDTO = json.ToClassOf<ExchangeRatesDto>();
             if (exchangeRatesDTO != null)            
@@ -79,33 +81,6 @@ namespace ExchangeRates.Infrastructure.Repositories
         private string GetConfigurationByKey(string key)
         {
             return _configuration[key];
-        }
-
-        private async Task<string> GetExchangeRatesAPI(string endpoint)
-        {
-            string json = null;
-            using (HttpClient httpClient = new HttpClient())
-            {
-                using (HttpResponseMessage httpResponseMessage = await httpClient.GetAsync(endpoint))
-                {
-                    if (httpResponseMessage.IsSuccessStatusCode)
-                    {
-                        using (HttpContent httpContent = httpResponseMessage.Content)
-                        {
-                            json = await httpContent.ReadAsStringAsync();
-                        }
-                    }
-                    else
-                    {
-                        string message = "An error on call ExchangeRatesAPI";
-                        int statusCode = (int)httpResponseMessage.StatusCode;
-                        _logger.Error($"{message} - endpoint: {endpoint} - statusCode: {statusCode}");
-                        _customValidator.Notify("An error on call ExchangeRatesAPI.");
-                    }
-                }
-            }
-
-            return json;
-        }
+        }               
     }
 }
