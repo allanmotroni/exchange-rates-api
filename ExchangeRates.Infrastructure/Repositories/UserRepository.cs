@@ -21,7 +21,7 @@ namespace ExchangeRates.Infrastructure.Repositories
 
         public async Task Create(User user)
         {
-            _logger.Info($"Creating user on Database. {user?.ToString()}");
+            _logger.Info($"Creating user on Database. User: {user?.ToString()}");
 
             await _databaseContext.User.AddAsync(user);
             await _databaseContext.SaveChangesAsync();
@@ -31,7 +31,7 @@ namespace ExchangeRates.Infrastructure.Repositories
 
         public async Task<User> GetById(int id)
         {
-            _logger.Info($"Getting user on Database by id. {id}");
+            _logger.Info($"Getting user on Database by id. Id: {id}");
 
             User user = await _databaseContext.User.FirstOrDefaultAsync(user => user.UserId == id);
 
