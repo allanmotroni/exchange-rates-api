@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 namespace ExchangeRates.Infrastructure.Dto
 {
     [Serializable]
-    public class ExchangeRatesDTO
+    public class ExchangeRatesDto
     {
         [JsonPropertyName("success")]
         public bool Success { get; set; }

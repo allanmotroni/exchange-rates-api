@@ -24,20 +24,14 @@ namespace ExchangeRates.Infrastructure.Repositories
             _configuration = configuration;
         }
 
-        public async Task<double> GetEuroExchangeRate(string fromCurrency, string toCurrency)
+        public async Task<double> GetExchangeRate(string fromCurrency, string toCurrency)
         {
             double rate = 0;
             string endpoint = ConfigureEndpoint(fromCurrency, toCurrency);
             string json = await GetExchangeRatesAPI(endpoint);
 
-            ExchangeRatesDTO exchangeRatesDTO = json.ToClassOf<ExchangeRatesDTO>();
-            if (exchangeRatesDTO == null)
-            {
-                string message = $"Error to convert the API response.";
-                _logger.Error(message);
-                _customValidator.Notify(message);
-            }
-            else
+            ExchangeRatesDto exchangeRatesDTO = json.ToClassOf<ExchangeRatesDto>();
+            if (exchangeRatesDTO != null)            
             {
                 KeyValuePair<string, double> keyValuePairRate = exchangeRatesDTO.Rates.FirstOrDefault(p => p.Key == toCurrency);
                 rate = keyValuePairRate.Value;
