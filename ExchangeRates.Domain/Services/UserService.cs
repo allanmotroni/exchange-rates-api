@@ -43,7 +43,7 @@ namespace ExchangeRates.Domain.Services
         {
             User user = null;
 
-            _validationService.Validate<string, AbstractValidator<string>>(email, new CustomStringValidation());
+            _validationService.Validate<string, AbstractValidator<string>>(email, new CustomEmailValidation());
             if (!_customValidator.HasErrors())
             {
                 user = await _userRepository.GetByEmail(email);
