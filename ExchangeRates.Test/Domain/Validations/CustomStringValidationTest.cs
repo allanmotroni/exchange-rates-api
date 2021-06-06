@@ -3,7 +3,7 @@ using ExchangeRates.Domain.Services;
 using ExchangeRates.Domain.Validations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ExchangeRates.Test.Domain
+namespace ExchangeRates.Test.Domain.Validations
 {
     [TestClass]
     public class CustomStringValidationTest
