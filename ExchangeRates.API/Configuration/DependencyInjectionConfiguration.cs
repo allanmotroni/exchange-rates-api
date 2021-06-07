@@ -33,6 +33,8 @@ namespace ExchangeRates.API.Configuration
             
             services.AddTransient<IPostService, PostService>();
 
+            services.AddTransient<IConfigureEndpoint, ConfigureExchangeRatesEndpointService>();
+
         }
     }
 }
