@@ -89,5 +89,28 @@ namespace ExchangeRates.Test.Domain.Services
             //Assert
             Assert.IsTrue(_customValidator.HasErrors());
         }
+
+        [TestMethod]
+        public async Task Given_A_Valid_Email_And_Null_User_Should_Return_A_Validation()
+        {
+            //Arrange
+            string email = "test@email.com";
+            User user = null;
+
+            var mockUserRepository = new Mock<IUserRepository>();
+
+            mockUserRepository.Setup(r => r.GetByEmail(It.IsAny<string>()))
+                .ReturnsAsync(user);
+
+            var userRepository = mockUserRepository.Object;
+
+            var userService = new UserService(userRepository, _validationService, _customValidator);
+
+            //Act
+            var userReturned = await userService.FindByEmail(email);
+
+            //Assert
+            Assert.IsTrue(_customValidator.HasErrors());
+        }
     }
 }
