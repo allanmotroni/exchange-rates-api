@@ -1,6 +1,7 @@
 ﻿using ExchangeRates.Domain.Interfaces.Logger;
 using ExchangeRates.Domain.Validations;
 using ExchangeRates.Infrastructure.Interfaces;
+using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -20,25 +21,32 @@ namespace ExchangeRates.Infrastructure.Services
         public async Task<string> Post(string endpoint)
         {
             string json = null;
-            using (HttpClient httpClient = new HttpClient())
+            try
             {
-                using (HttpResponseMessage httpResponseMessage = await httpClient.GetAsync(endpoint))
+                using (HttpClient httpClient = new HttpClient())
                 {
-                    if (httpResponseMessage.IsSuccessStatusCode)
+                    using (HttpResponseMessage httpResponseMessage = await httpClient.GetAsync(endpoint))
                     {
-                        using (HttpContent httpContent = httpResponseMessage.Content)
+                        if (httpResponseMessage.IsSuccessStatusCode)
                         {
-                            json = await httpContent.ReadAsStringAsync();
+                            using (HttpContent httpContent = httpResponseMessage.Content)
+                            {
+                                json = await httpContent.ReadAsStringAsync();
+                            }
+                        }
+                        else
+                        {
+                            string message = "An error on call ExchangeRatesAPI";
+                            int statusCode = (int)httpResponseMessage.StatusCode;
+                            _logger.Error($"{message} - endpoint: {endpoint} - statusCode: {statusCode}");
+                            _customValidator.Notify("An error on call ExchangeRatesAPI.");
                         }
                     }
-                    else
-                    {
-                        string message = "An error on call ExchangeRatesAPI";
-                        int statusCode = (int)httpResponseMessage.StatusCode;
-                        _logger.Error($"{message} - endpoint: {endpoint} - statusCode: {statusCode}");
-                        _customValidator.Notify("An error on call ExchangeRatesAPI.");
-                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                _customValidator.Notify(ex.Message);
             }
 
             return json;
