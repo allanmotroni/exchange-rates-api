@@ -3,8 +3,10 @@ using ExchangeRates.Domain.Interfaces.Repositories;
 using ExchangeRates.Domain.Interfaces.Services;
 using ExchangeRates.Domain.Services;
 using ExchangeRates.Domain.Validations;
+using ExchangeRates.Infrastructure.Interfaces;
 using ExchangeRates.Infrastructure.Logger;
 using ExchangeRates.Infrastructure.Repositories;
+using ExchangeRates.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ExchangeRates.API.Configuration
@@ -28,6 +30,8 @@ namespace ExchangeRates.API.Configuration
             services.AddScoped<ICustomValidator, Validator>();
 
             services.AddScoped<ValidationService, ValidationService>();
+            
+            services.AddTransient<IPostService, PostService>();
 
         }
     }
