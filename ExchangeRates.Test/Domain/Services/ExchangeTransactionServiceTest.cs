@@ -221,5 +221,31 @@ namespace ExchangeRates.Test.Domain.Services
             Assert.AreEqual(0, transactionsReturned.Count);
         }
 
+        [TestMethod]
+        public async Task Given_A_Invalid_UserId_Should_Return_A_Validation()
+        {
+            //Arrange
+            User user = null;
+
+            var mockUserRepository = new Mock<IUserRepository>();
+            mockUserRepository.Setup(user => user.GetById(It.IsAny<int>()))
+                .ReturnsAsync(user);
+            var userRepository = mockUserRepository.Object;
+
+            var mockTransactionRepository = new Mock<ITransactionRepository>();
+            var transactionRepository = mockTransactionRepository.Object;
+
+            var mockExchangeRateRepository = new Mock<IExchangeRateRepository>();
+            var exchangeRateRepository = mockExchangeRateRepository.Object;
+
+            ExchangeTransactionService exchangeTransactionService = new ExchangeTransactionService(_validationService, _customValidator, transactionRepository, userRepository, exchangeRateRepository);
+
+            //Act
+            IList<Transaction> transactionsReturned = await exchangeTransactionService.ListByUserId(0);
+
+            //Assert
+            Assert.IsTrue(_customValidator.HasErrors());
+        }
+
     }
 }
