@@ -7,6 +7,7 @@ COPY *.sln ./
 COPY ExchangeRates.API/ExchangeRates.API.csproj ExchangeRates.API/
 COPY ExchangeRates.Domain/ExchangeRates.Domain.csproj ExchangeRates.Domain/
 COPY ExchangeRates.Infrastructure/ExchangeRates.Infrastructure.csproj ExchangeRates.Infrastructure/
+COPY ExchangeRates.Test/ExchangeRates.Test.csproj ExchangeRates.Test/
 RUN dotnet restore
 COPY . .
 WORKDIR /src/ExchangeRates.API
