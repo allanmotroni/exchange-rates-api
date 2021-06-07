@@ -48,8 +48,13 @@ namespace ExchangeRates.Infrastructure.Services
 
         private string CreateEndpoint(string baseURL, string fromCurrency, string toCurrency)
         {
-            string token = GetAccessKey();
-            return Path.Combine(baseURL, $"latest?access_key={token}&base={fromCurrency}&symbols={toCurrency}");
+            if (!string.IsNullOrEmpty(baseURL) && !string.IsNullOrEmpty(fromCurrency) && !string.IsNullOrEmpty(toCurrency))
+            {
+                string token = GetAccessKey();
+                return Path.Combine(baseURL, $"latest?access_key={token}&base={fromCurrency}&symbols={toCurrency}");
+            }
+
+            return null;
         }
 
         private string GetAccessKey()
