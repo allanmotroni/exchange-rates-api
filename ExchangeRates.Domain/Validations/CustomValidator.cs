@@ -3,10 +3,10 @@ using System.Linq;
 
 namespace ExchangeRates.Domain.Validations
 {
-    public class Validator : ICustomValidator
+    public class CustomValidator : ICustomValidator
     {
         private readonly IList<string> _validations;
-        public Validator()
+        public CustomValidator()
         {
             _validations = new List<string>();
         }

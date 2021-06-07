@@ -16,7 +16,7 @@ namespace ExchangeRates.Test.Domain.Validations
 
         public CreateTransactionValidationTest()
         {
-            _customValidator = new Validator();
+            _customValidator = new CustomValidator();
             _validationService = new ValidationService(_customValidator);
         }
 

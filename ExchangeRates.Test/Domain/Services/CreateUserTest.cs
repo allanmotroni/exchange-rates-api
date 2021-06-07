@@ -19,7 +19,7 @@ namespace ExchangeRates.Test.Domain.Services
 
         public CreateUserTest()
         {
-            _customValidator = new Validator();
+            _customValidator = new CustomValidator();
             _validationService = new ValidationService(_customValidator);
             _userRepositoryFake = new UserRepositoryFake();
         }

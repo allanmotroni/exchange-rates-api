@@ -17,7 +17,7 @@ namespace ExchangeRates.Test.Domain.Services
 
         public FindByEmailTest()
         {
-            _customValidator = new Validator();
+            _customValidator = new CustomValidator();
             _validationService = new ValidationService(_customValidator);
         }
 

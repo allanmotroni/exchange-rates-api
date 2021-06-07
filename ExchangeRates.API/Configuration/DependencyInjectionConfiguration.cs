@@ -27,7 +27,7 @@ namespace ExchangeRates.API.Configuration
 
             services.AddTransient<IExchangeRateRepository, ExchangeRateRepository>();
 
-            services.AddScoped<ICustomValidator, Validator>();
+            services.AddScoped<ICustomValidator, CustomValidator>();
 
             services.AddScoped<ValidationService, ValidationService>();
             
