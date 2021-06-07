@@ -50,7 +50,30 @@ namespace ExchangeRates.Test.Infrastructure.Services
         }
 
         [TestMethod]
-        public async Task Given_An_Invalid_Endpoint_Should_Return_Null()
+        public async Task Given_A_Valid_Endpoint_Should_Return_A_Validation()
+        {
+            //Arrange
+            var mockCustomLogger = new Mock<ICustomLogger>();
+            var mockCustomValidator = new Mock<ICustomValidator>();
+
+            var configureEndpoint = new ConfigureExchangeRatesEndpointService(_configuration, mockCustomLogger.Object, mockCustomValidator.Object);
+
+            string fromCurrency = "BRL";
+            string toCurrency = "USD";
+            string endpoint = configureEndpoint.Configure(fromCurrency, toCurrency);
+
+            ICustomValidator customValidator = new CustomValidator();
+            var postService = new PostService(customValidator, mockCustomLogger.Object);
+
+            //Act
+            var json = await postService.Post(endpoint);
+
+            //Assert
+            Assert.IsTrue(customValidator.HasErrors());
+        }
+
+        [TestMethod]
+        public async Task Given_An_Empty_Endpoint_Should_Return_Null()
         {
             //Arrange
             var mockCustomLogger = new Mock<ICustomLogger>();
