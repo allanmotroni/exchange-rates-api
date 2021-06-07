@@ -54,7 +54,7 @@ namespace ExchangeRates.Domain.Services
             return user;
         }
 
-        public async Task<IEnumerable<User>> FindAll()
+        public async Task<IList<User>> FindAll()
         {
             IList<User> users = await _userRepository.GetAll();
             if (users.Count == 0)
