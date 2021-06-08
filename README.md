@@ -68,7 +68,7 @@ The layer who receive all the requests from outside.
 **Domain**
 The main layer, who get the application bussines rules.
 
-**Infraestructure**
+**Infrastructure**
 The layer responsible to access repositories like external API and database access.
 
 ## Heroku
