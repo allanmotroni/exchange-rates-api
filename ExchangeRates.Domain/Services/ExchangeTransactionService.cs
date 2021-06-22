@@ -37,17 +37,14 @@ namespace ExchangeRates.Domain.Services
                 }
                 else
                 {
-                    double rate = await _exchangeRateRepository.GetEuroExchangeRate(transaction.FromCurrency, transaction.ToCurrency);
-
-                    transaction.Rate = rate;
-                    transaction.ToValue = transaction.FromValue * rate;
-
-                    await _transactionRepository.Create(transaction);
+                    double rate = await _exchangeRateRepository.GetExchangeRate(transaction.FromCurrency, transaction.ToCurrency);
+                    if (transaction.CalculateRate(rate))
+                        await _transactionRepository.Create(transaction);
                 }
             }
         }
 
-        public async Task<IEnumerable<Transaction>> ListByUserId(int userId)
+        public async Task<IList<Transaction>> ListByUserId(int userId)
         {
             IList<Transaction> transactions = null;
 

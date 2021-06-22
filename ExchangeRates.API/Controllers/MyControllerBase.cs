@@ -47,7 +47,7 @@ namespace ExchangeRates.API.Controllers
 
         private IActionResult CustomSuccessResponse<T>(T returnedObject)
         {
-            _logger.Info($"{returnedObject?.ToString()}");
+            _logger.Info($"Success response. {returnedObject}");
 
             return Ok(new
             {

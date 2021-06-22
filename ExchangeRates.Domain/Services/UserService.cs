@@ -43,7 +43,7 @@ namespace ExchangeRates.Domain.Services
         {
             User user = null;
 
-            _validationService.Validate<string, AbstractValidator<string>>(email, new CustomStringValidation());
+            _validationService.Validate<string, AbstractValidator<string>>(email, new CustomEmailValidation());
             if (!_customValidator.HasErrors())
             {
                 user = await _userRepository.GetByEmail(email);
@@ -54,7 +54,7 @@ namespace ExchangeRates.Domain.Services
             return user;
         }
 
-        public async Task<IEnumerable<User>> FindAll()
+        public async Task<IList<User>> FindAll()
         {
             IList<User> users = await _userRepository.GetAll();
             if (users.Count == 0)

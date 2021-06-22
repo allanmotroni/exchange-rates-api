@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 
-namespace ExchangeRates.Test.Domain
+namespace ExchangeRates.Test.Domain.Validations
 {
     [TestClass]
     public class CreateTransactionValidationTest
@@ -16,7 +16,7 @@ namespace ExchangeRates.Test.Domain
 
         public CreateTransactionValidationTest()
         {
-            _customValidator = new Validator();
+            _customValidator = new CustomValidator();
             _validationService = new ValidationService(_customValidator);
         }
 

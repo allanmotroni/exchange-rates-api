@@ -10,7 +10,7 @@ namespace ExchangeRates.Domain.Interfaces.Services
 
         public Task<User> FindByEmail(string email);
 
-        public Task<IEnumerable<User>> FindAll();
+        public Task<IList<User>> FindAll();
 
     }
 }

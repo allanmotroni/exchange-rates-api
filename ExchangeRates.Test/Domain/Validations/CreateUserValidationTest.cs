@@ -4,12 +4,9 @@ using ExchangeRates.Domain.Services;
 using ExchangeRates.Domain.Validations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ExchangeRates.Test.Domain
+namespace ExchangeRates.Test.Domain.Validations
 {
     [TestClass]
     public class CreateUserValidationTest
@@ -19,7 +16,7 @@ namespace ExchangeRates.Test.Domain
 
         public CreateUserValidationTest()
         {
-            _customValidator = new Validator();
+            _customValidator = new CustomValidator();
             _validationService = new ValidationService(_customValidator);
         }
 
