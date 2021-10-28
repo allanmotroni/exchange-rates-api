@@ -1,21 +1,21 @@
 ﻿using ExchangeRates.Domain.Interfaces.Logger;
 using ExchangeRates.Domain.Validations;
-using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Web.Http;
 
 namespace ExchangeRates.API.Controllers
 {
-    public abstract class MyControllerBase : ControllerBase
+    public abstract class BaseController : ApiController
     {
         protected readonly ICustomValidator _customValidator;
         protected readonly ICustomLogger _logger;
-        protected MyControllerBase(ICustomValidator customValidator, ICustomLogger logger)
+        protected BaseController(ICustomValidator customValidator, ICustomLogger logger)
         {
             _customValidator = customValidator;
             _logger = logger;
         }
 
-        public IActionResult CustomReponse<T>(T returnedObject)
+        public IHttpActionResult CustomReponse<T>(T returnedObject)
         {
             if (IsValid)
                 return CustomSuccessResponse(returnedObject);
@@ -23,29 +23,21 @@ namespace ExchangeRates.API.Controllers
                 return CustomBadRequestResponse();
         }
 
-        private IActionResult CustomBadRequestResponse()
+        private IHttpActionResult CustomBadRequestResponse()
         {
             _logger.Warn($"{_customValidator.GetStringValidations()}");
 
-            return BadRequest(new
-            {
-                success = false,
-                messages = _customValidator.GetValidations()
-            });
+            return BadRequest();
         }
 
-        protected IActionResult CustomExceptionResponse(Exception ex)
+        protected IHttpActionResult CustomExceptionResponse(Exception ex)
         {
             _logger.Exception(ex);
 
-            return BadRequest(new
-            {
-                success = false,
-                message = "An error has occured while trying to proccess this request."
-            });
+            return BadRequest();
         }
 
-        private IActionResult CustomSuccessResponse<T>(T returnedObject)
+        private IHttpActionResult CustomSuccessResponse<T>(T returnedObject)
         {
             _logger.Info($"Success response. {returnedObject}");
 

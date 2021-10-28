@@ -6,11 +6,9 @@ namespace ExchangeRates.Domain.Interfaces.Services
 {
     public interface IUserService
     {
-        public Task Create(User user);
-
-        public Task<User> FindByEmail(string email);
-
-        public Task<IList<User>> FindAll();
-
+        Task Create(User user);
+        Task<User> FindByEmail(string email);
+        Task<IList<User>> FindAll();
+        Task<User> FindById(int id);
     }
 }

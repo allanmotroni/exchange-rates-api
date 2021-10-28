@@ -3,16 +3,15 @@ using ExchangeRates.Domain.Entities;
 using ExchangeRates.Domain.Interfaces.Logger;
 using ExchangeRates.Domain.Interfaces.Services;
 using ExchangeRates.Domain.Validations;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace ExchangeRates.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TransactionController : MyControllerBase
+    [Route("v1/api/transactions")]    
+    public class TransactionController : BaseController
     {
         private readonly IExchangeTransactionService _exchangeTransactionService;
         private readonly IMapper _mapper;
@@ -24,8 +23,7 @@ namespace ExchangeRates.API.Controllers
         }
 
         [HttpPost]
-        [Route("[action]")]
-        public async Task<IActionResult> Convert([FromBody] NewTransactionDto newTransactionDto)
+        public async Task<IHttpActionResult> Post([FromBody] NewTransactionDto newTransactionDto)
         {
             try
             {
@@ -47,8 +45,8 @@ namespace ExchangeRates.API.Controllers
         }
 
         [HttpGet]
-        [Route("[action]/{userId:int}")]
-        public async Task<IActionResult> ListByUserId(int userId)
+        [Route("user/{userId:int}")]
+        public async Task<IHttpActionResult> ListByUserId(int userId)
         {
             try
             {

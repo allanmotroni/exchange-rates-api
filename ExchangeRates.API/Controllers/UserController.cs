@@ -3,16 +3,15 @@ using ExchangeRates.Domain.Entities;
 using ExchangeRates.Domain.Interfaces.Logger;
 using ExchangeRates.Domain.Interfaces.Services;
 using ExchangeRates.Domain.Validations;
-using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace ExchangeRates.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UserController : MyControllerBase
+    [Route("v1/api/users")]    
+    public class UserController : BaseController
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
@@ -24,9 +23,8 @@ namespace ExchangeRates.API.Controllers
             _mapper = mapper;
         }
 
-        [HttpPost]
-        [Route("[action]")]
-        public async Task<IActionResult> Create([FromBody] NewUserDto newUserDto)
+        [HttpPost]        
+        public async Task<IHttpActionResult> Post([FromBody] NewUserDto newUserDto)
         {
             try
             {
@@ -48,8 +46,8 @@ namespace ExchangeRates.API.Controllers
         }
 
         [HttpGet]
-        [Route("[action]/{email}")]
-        public async Task<IActionResult> FindByEmail(string email)
+        [Route("{email}")]
+        public async Task<IHttpActionResult> FindByEmail(string email)
         {
             try
             {
@@ -69,9 +67,8 @@ namespace ExchangeRates.API.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("[action]")]
-        public async Task<IActionResult> FindAll()
+        [HttpGet]        
+        public async Task<IHttpActionResult> Get()
         {
             try
             {
@@ -84,6 +81,28 @@ namespace ExchangeRates.API.Controllers
                     usersDto = _mapper.Map<IEnumerable<UserDto>>(users);
 
                 return CustomReponse(usersDto);
+            }
+            catch (Exception exception)
+            {
+                return CustomExceptionResponse(exception);
+            }
+        }
+
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<IHttpActionResult> Get(int id)
+        {
+            try
+            {
+                _logger.Info($"Finding all Users");
+
+                User user = await _userService.FindById(id);
+
+                UserDto userDto = null;
+                if (IsValid)
+                    userDto = _mapper.Map<UserDto>(user);
+
+                return CustomReponse(userDto);
             }
             catch (Exception exception)
             {

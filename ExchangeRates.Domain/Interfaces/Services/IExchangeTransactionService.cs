@@ -6,8 +6,8 @@ namespace ExchangeRates.Domain.Interfaces.Services
 {
     public interface IExchangeTransactionService
     {
-        public Task Convert(Transaction transaction);
+        Task Convert(Transaction transaction);
 
-        public Task<IList<Transaction>> ListByUserId(int userId);
+        Task<IList<Transaction>> ListByUserId(int userId);
     }
 }

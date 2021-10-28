@@ -22,21 +22,22 @@ namespace ExchangeRates.Domain.Services
             _customValidator = customValidator;
         }
 
-        public async Task Create(User user)
+        public async Task<User> FindById(int id)
         {
-            _validationService.Validate(user, new CreateUserValidation());
-            if (!_customValidator.HasErrors())
-            {
-                User userCreated = await _userRepository.GetByEmail(user.Email);
-                if (userCreated == null)
-                {
-                    await _userRepository.Create(user);
-                }
-                else
-                {
-                    _customValidator.Notify($"E-mail already registered. {user.Email}");
-                }
-            }
+            User user = await _userRepository.GetById(id);
+            if (user == null)
+                _customValidator.Notify("User not found.");
+
+            return user;
+        }
+
+        public async Task<IList<User>> FindAll()
+        {
+            IList<User> users = await _userRepository.GetAll();
+            if (users.Count == 0)
+                _customValidator.Notify("No Users were found.");
+
+            return users;
         }
 
         public async Task<User> FindByEmail(string email)
@@ -54,13 +55,21 @@ namespace ExchangeRates.Domain.Services
             return user;
         }
 
-        public async Task<IList<User>> FindAll()
+        public async Task Create(User user)
         {
-            IList<User> users = await _userRepository.GetAll();
-            if (users.Count == 0)
-                _customValidator.Notify("No Users were found in Database.");
-
-            return users;
+            _validationService.Validate(user, new CreateUserValidation());
+            if (!_customValidator.HasErrors())
+            {
+                User userCreated = await _userRepository.GetByEmail(user.Email);
+                if (userCreated == null)
+                {
+                    await _userRepository.Create(user);
+                }
+                else
+                {
+                    _customValidator.Notify($"E-mail already registered. {user.Email}");
+                }
+            }
         }
 
     }
