@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ExchangeRates.API.Interfaces;
 using ExchangeRates.Domain.Entities;
 using ExchangeRates.Domain.Interfaces.Logger;
 using ExchangeRates.Domain.Interfaces.Services;
@@ -10,23 +11,21 @@ using System.Threading.Tasks;
 
 namespace ExchangeRates.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UserController : MyControllerBase
+    [Route("v1/api/users")]
+    public class UserController : BaseController
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
         public UserController(IUserService userService, IMapper mapper, ICustomValidator customValidator, ICustomLogger logger)
-            : base(customValidator, logger)
+            : base(customValidator, logger, userService)
         {
             _userService = userService;
             _mapper = mapper;
         }
 
         [HttpPost]
-        [Route("[action]")]
-        public async Task<IActionResult> Create([FromBody] NewUserDto newUserDto)
+        public async Task<IActionResult> Post([FromBody] NewUserDto newUserDto)
         {
             try
             {
@@ -37,9 +36,12 @@ namespace ExchangeRates.API.Controllers
 
                 UserDto userDto = null;
                 if (IsValid)
+                {
                     userDto = _mapper.Map<UserDto>(user);
-
-                return CustomReponse(userDto);
+                    return CreatedAtAction(nameof(GetId), new { id = userDto.UserId }, userDto);
+                }
+                else
+                    return CustomReponse(newUserDto);
             }
             catch (Exception exception)
             {
@@ -48,18 +50,19 @@ namespace ExchangeRates.API.Controllers
         }
 
         [HttpGet]
-        [Route("[action]/{email}")]
-        public async Task<IActionResult> FindByEmail(string email)
+        [Route("email/{email}")]
+        public async Task<IActionResult> FindByEmail([FromHeader] int userAuthentication, string email)
         {
             try
             {
                 _logger.Info($"Finding an User by Email: {email}");
 
-                User user = await _userService.FindByEmail(email);
+                if (!await VerifyUser(userAuthentication)) return Unauthorized();
 
-                UserDto userDto = null;
-                if (IsValid)
-                    userDto = _mapper.Map<UserDto>(user);
+                User user = await _userService.FindByEmail(email);
+                if (user == null) return NotFound();
+
+                UserDto userDto = _mapper.Map<UserDto>(user);
 
                 return CustomReponse(userDto);
             }
@@ -70,20 +73,48 @@ namespace ExchangeRates.API.Controllers
         }
 
         [HttpGet]
-        [Route("[action]")]
-        public async Task<IActionResult> FindAll()
+        public async Task<IActionResult> Get([FromHeader] int userAuthentication)
         {
             try
             {
                 _logger.Info($"Finding all Users");
 
-                IEnumerable<User> users = await _userService.FindAll();
+                if (!await VerifyUser(userAuthentication)) return Unauthorized();
+
+                IList<User> users = await _userService.FindAll();
+                if (users.Count == 0) return NotFound();
 
                 IEnumerable<UserDto> usersDto = null;
                 if (IsValid)
                     usersDto = _mapper.Map<IEnumerable<UserDto>>(users);
 
                 return CustomReponse(usersDto);
+            }
+            catch (Exception exception)
+            {
+                return CustomExceptionResponse(exception);
+            }
+        }
+
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<IActionResult> GetId([FromHeader] int userId, int id)
+        {
+            try
+            {
+                _logger.Info($"Finding all Users");
+
+                if (!await VerifyUser(userId)) return Unauthorized();
+
+                User user = await _userService.FindById(id);
+
+                if (user == null) return NotFound ();
+
+                UserDto userDto = null;
+                if (IsValid)
+                    userDto = _mapper.Map<UserDto>(user);
+
+                return CustomReponse(userDto);
             }
             catch (Exception exception)
             {

@@ -1,8 +1,9 @@
-﻿using System;
+﻿using ExchangeRates.API.Interfaces;
+using System;
 
 namespace ExchangeRates.API
 {
-    public class TransactionDto
+    public class TransactionDto : IUser
     {
         public int TransactionId { get; set; }
         public int UserId { get; set; }

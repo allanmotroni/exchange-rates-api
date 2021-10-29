@@ -1,6 +1,8 @@
-﻿namespace ExchangeRates.API
+﻿using ExchangeRates.API.Interfaces;
+
+namespace ExchangeRates.API
 {
-    public class UserDto
+    public class UserDto : IUser
     {
         public int UserId { get; set; }
         public string Name { get; set; }

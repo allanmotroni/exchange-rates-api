@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using ExchangeRates.API.Interfaces;
 using ExchangeRates.Domain.Entities;
 using ExchangeRates.Domain.Interfaces.Logger;
 using ExchangeRates.Domain.Interfaces.Services;
@@ -10,25 +11,28 @@ using System.Threading.Tasks;
 
 namespace ExchangeRates.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TransactionController : MyControllerBase
+    [Route("v1/api/transactions")]
+    public class TransactionController : BaseController
     {
         private readonly IExchangeTransactionService _exchangeTransactionService;
+        private readonly IUserService _userService;
+
         private readonly IMapper _mapper;
-        public TransactionController(ICustomValidator customValidator, ICustomLogger logger, IExchangeTransactionService exchangeTransactionService, IMapper mapper)
-            : base(customValidator, logger) 
+        public TransactionController(ICustomValidator customValidator, ICustomLogger logger, IExchangeTransactionService exchangeTransactionService, IMapper mapper, IUserService userService)
+            : base(customValidator, logger, userService)
         {
             _exchangeTransactionService = exchangeTransactionService;
             _mapper = mapper;
+            _userService = userService;
         }
 
         [HttpPost]
-        [Route("[action]")]
-        public async Task<IActionResult> Convert([FromBody] NewTransactionDto newTransactionDto)
+        public async Task<IActionResult> Post([FromBody] NewTransactionDto newTransactionDto)
         {
             try
             {
+                if (!await VerifyUser(newTransactionDto)) return Unauthorized();
+
                 _logger.Info($"Starting a new transaction. {newTransactionDto}");
 
                 Transaction transaction = _mapper.Map<Transaction>(newTransactionDto);
@@ -36,9 +40,14 @@ namespace ExchangeRates.API.Controllers
 
                 TransactionDto transactionDto = null;
                 if (IsValid)
+                {
                     transactionDto = _mapper.Map<TransactionDto>(transaction);
-
-                return CustomReponse(transactionDto);
+                    return CreatedAtAction(nameof(ListByUserId), new { UserId = transactionDto.UserId }, transactionDto);
+                }
+                else
+                {
+                    return CustomReponse(transactionDto);
+                }
             }
             catch (Exception exception)
             {
@@ -47,14 +56,18 @@ namespace ExchangeRates.API.Controllers
         }
 
         [HttpGet]
-        [Route("[action]/{userId:int}")]
-        public async Task<IActionResult> ListByUserId(int userId)
+        [Route("user/{userId:int}")]
+        public async Task<IActionResult> ListByUserId(int userId, [FromHeader] int userAuthenticated)
         {
             try
             {
+                if (!await VerifyUser(userAuthenticated)) return Unauthorized();
+
                 _logger.Info($"Listing all transactions by User. UserId: {userId}");
 
-                IEnumerable<Transaction> transactions = await _exchangeTransactionService.ListByUserId(userId);
+                IList<Transaction> transactions = await _exchangeTransactionService.ListByUserId(userId);
+
+                if (transactions.Count == 0) return NotFound();
 
                 IEnumerable<TransactionDto> transactionsDto = null;
                 if (IsValid)

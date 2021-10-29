@@ -6,8 +6,8 @@ namespace ExchangeRates.Domain.Interfaces.Repositories
 {
     public interface ITransactionRepository
     {
-        public Task Create(Transaction transaction);
+        Task Create(Transaction transaction);
         
-        public Task<IList<Transaction>> ListByUserId(int userId);
+        Task<IList<Transaction>> ListByUserId(int userId);
     }
 }

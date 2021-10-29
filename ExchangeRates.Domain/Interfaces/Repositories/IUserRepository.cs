@@ -6,12 +6,12 @@ namespace ExchangeRates.Domain.Interfaces.Repositories
 {
     public interface IUserRepository
     {
-        public Task Create(User user);
+        Task Create(User user);
 
-        public Task<User> GetById(int id);
+        Task<User> GetById(int id);
 
-        public Task<User> GetByEmail(string email);
+        Task<User> GetByEmail(string email);
 
-        public Task<IList<User>> GetAll();
+        Task<IList<User>> GetAll();
     }
 }
