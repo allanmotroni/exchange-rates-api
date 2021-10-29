@@ -1,30 +1,31 @@
 ﻿using AutoMapper;
+using ExchangeRates.API.Interfaces;
 using ExchangeRates.Domain.Entities;
 using ExchangeRates.Domain.Interfaces.Logger;
 using ExchangeRates.Domain.Interfaces.Services;
 using ExchangeRates.Domain.Validations;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web.Http;
 
 namespace ExchangeRates.API.Controllers
 {
-    [Route("v1/api/users")]    
+    [Route("v1/api/users")]
     public class UserController : BaseController
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
         public UserController(IUserService userService, IMapper mapper, ICustomValidator customValidator, ICustomLogger logger)
-            : base(customValidator, logger)
+            : base(customValidator, logger, userService)
         {
             _userService = userService;
             _mapper = mapper;
         }
 
-        [HttpPost]        
-        public async Task<IHttpActionResult> Post([FromBody] NewUserDto newUserDto)
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] NewUserDto newUserDto)
         {
             try
             {
@@ -35,7 +36,33 @@ namespace ExchangeRates.API.Controllers
 
                 UserDto userDto = null;
                 if (IsValid)
+                {
                     userDto = _mapper.Map<UserDto>(user);
+                    return CreatedAtAction(nameof(GetId), new { id = userDto.UserId }, userDto);
+                }
+                else
+                    return CustomReponse(newUserDto);
+            }
+            catch (Exception exception)
+            {
+                return CustomExceptionResponse(exception);
+            }
+        }
+
+        [HttpGet]
+        [Route("email/{email}")]
+        public async Task<IActionResult> FindByEmail([FromHeader] int userAuthentication, string email)
+        {
+            try
+            {
+                _logger.Info($"Finding an User by Email: {email}");
+
+                if (!await VerifyUser(userAuthentication)) return Unauthorized();
+
+                User user = await _userService.FindByEmail(email);
+                if (user == null) return NotFound();
+
+                UserDto userDto = _mapper.Map<UserDto>(user);
 
                 return CustomReponse(userDto);
             }
@@ -46,35 +73,16 @@ namespace ExchangeRates.API.Controllers
         }
 
         [HttpGet]
-        [Route("{email}")]
-        public async Task<IHttpActionResult> FindByEmail(string email)
-        {
-            try
-            {
-                _logger.Info($"Finding an User by Email: {email}");
-
-                User user = await _userService.FindByEmail(email);
-
-                UserDto userDto = null;
-                if (IsValid)
-                    userDto = _mapper.Map<UserDto>(user);
-
-                return CustomReponse(userDto);
-            }
-            catch (Exception exception)
-            {
-                return CustomExceptionResponse(exception);
-            }
-        }
-
-        [HttpGet]        
-        public async Task<IHttpActionResult> Get()
+        public async Task<IActionResult> Get([FromHeader] int userAuthentication)
         {
             try
             {
                 _logger.Info($"Finding all Users");
 
-                IEnumerable<User> users = await _userService.FindAll();
+                if (!await VerifyUser(userAuthentication)) return Unauthorized();
+
+                IList<User> users = await _userService.FindAll();
+                if (users.Count == 0) return NotFound();
 
                 IEnumerable<UserDto> usersDto = null;
                 if (IsValid)
@@ -90,13 +98,17 @@ namespace ExchangeRates.API.Controllers
 
         [HttpGet]
         [Route("{id:int}")]
-        public async Task<IHttpActionResult> Get(int id)
+        public async Task<IActionResult> GetId([FromHeader] int userId, int id)
         {
             try
             {
                 _logger.Info($"Finding all Users");
 
+                if (!await VerifyUser(userId)) return Unauthorized();
+
                 User user = await _userService.FindById(id);
+
+                if (user == null) return NotFound ();
 
                 UserDto userDto = null;
                 if (IsValid)

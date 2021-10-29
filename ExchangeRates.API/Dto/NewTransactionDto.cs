@@ -1,6 +1,8 @@
-﻿namespace ExchangeRates.API
+﻿using ExchangeRates.API.Interfaces;
+
+namespace ExchangeRates.API
 {
-    public class NewTransactionDto
+    public class NewTransactionDto : IUser
     {
         public int UserId { get; set; }
         public string FromCurrency { get; set; }
