@@ -1,7 +1,7 @@
-﻿using ExchangeRates.Domain.Interfaces.Logger;
+﻿using ExchangeRates.Application.Interfaces;
+using ExchangeRates.Application.Services;
+using ExchangeRates.Domain.Interfaces.Logger;
 using ExchangeRates.Domain.Validations;
-using ExchangeRates.Infrastructure.Interfaces;
-using ExchangeRates.Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ExchangeRates.Test.Infrastructure.Repositories
 {
-    [TestClass]
+   [TestClass]
     public class ExchangeRateRepositoryTest
     {
         
@@ -31,18 +31,18 @@ namespace ExchangeRates.Test.Infrastructure.Repositories
             var mockConfiguration = new Mock<IConfiguration>();
             var configuration = mockConfiguration.Object;
 
-            var mockPostService = new Mock<IPostService>();
-            mockPostService.Setup(post => post.Post(It.IsAny<string>()))
+            var mockGetService = new Mock<IGetService>();
+            mockGetService.Setup(post => post.GetAsync(It.IsAny<string>()))
                 .ReturnsAsync(jsonReturned);
-            var postService = mockPostService.Object;
+            var getService = mockGetService.Object;
 
             var mockConfigureEndpoint = new Mock<IConfigureEndpoint>();
             var configureEndpoint = mockConfigureEndpoint.Object;
 
-            ExchangeRateRepository exchangeRateRepository = new ExchangeRateRepository(customValidator, customLogger, configuration, postService, configureEndpoint);
+            IExchangeRateService exchangeRateService = new ExchangeRateService(getService, configureEndpoint);
 
             //Act
-            var rate = await exchangeRateRepository.GetExchangeRate(fromCurrency, toCurrency);
+            var rate = await exchangeRateService.GetExchangeRate(fromCurrency, toCurrency);
 
             //Assert
             Assert.AreEqual(rate, 1.21633);

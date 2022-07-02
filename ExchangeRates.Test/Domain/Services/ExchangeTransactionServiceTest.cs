@@ -1,6 +1,7 @@
-﻿using ExchangeRates.Domain.Entities;
+﻿using ExchangeRates.Application.Interfaces;
+using ExchangeRates.Application.Services;
+using ExchangeRates.Domain.Entities;
 using ExchangeRates.Domain.Interfaces.Repositories;
-using ExchangeRates.Domain.Services;
 using ExchangeRates.Domain.Validations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace ExchangeRates.Test.Domain.Services
 {
-    [TestClass]
+   [TestClass]
     public class ExchangeTransactionServiceTest
     {
         private readonly ValidationService _validationService;
@@ -36,7 +37,7 @@ namespace ExchangeRates.Test.Domain.Services
             var mockTransactionRepository = new Mock<ITransactionRepository>();
             var transactionRepository = mockTransactionRepository.Object;
 
-            var mockExchangeRateRepository = new Mock<IExchangeRateRepository>();
+            var mockExchangeRateRepository = new Mock<IExchangeRateService>();
             var exchangeRateRepository = mockExchangeRateRepository.Object;
 
             ExchangeTransactionService exchangeTransactionService = new ExchangeTransactionService(_validationService, _customValidator, transactionRepository, userRepository, exchangeRateRepository);
@@ -64,7 +65,7 @@ namespace ExchangeRates.Test.Domain.Services
             var mockTransactionRepository = new Mock<ITransactionRepository>();
             var transactionRepository = mockTransactionRepository.Object;
 
-            var mockExchangeRateRepository = new Mock<IExchangeRateRepository>();
+            var mockExchangeRateRepository = new Mock<IExchangeRateService>();
             var exchangeRateRepository = mockExchangeRateRepository.Object;
 
             ExchangeTransactionService exchangeTransactionService = new ExchangeTransactionService(_validationService, _customValidator, transactionRepository, userRepository, exchangeRateRepository);
@@ -90,7 +91,7 @@ namespace ExchangeRates.Test.Domain.Services
             var mockTransactionRepository = new Mock<ITransactionRepository>();
             var transactionRepository = mockTransactionRepository.Object;
 
-            var mockExchangeRateRepository = new Mock<IExchangeRateRepository>();
+            var mockExchangeRateRepository = new Mock<IExchangeRateService>();
             var exchangeRateRepository = mockExchangeRateRepository.Object;
 
             ExchangeTransactionService exchangeTransactionService = new ExchangeTransactionService(_validationService, _customValidator, transactionRepository, userRepository, exchangeRateRepository);
@@ -117,7 +118,7 @@ namespace ExchangeRates.Test.Domain.Services
             var mockTransactionRepository = new Mock<ITransactionRepository>();
             var transactionRepository = mockTransactionRepository.Object;
 
-            var mockExchangeRateRepository = new Mock<IExchangeRateRepository>();
+            var mockExchangeRateRepository = new Mock<IExchangeRateService>();
             var exchangeRateRepository = mockExchangeRateRepository.Object;
 
             ExchangeTransactionService exchangeTransactionService = new ExchangeTransactionService(_validationService, _customValidator, transactionRepository, userRepository, exchangeRateRepository);
@@ -146,7 +147,7 @@ namespace ExchangeRates.Test.Domain.Services
             var mockTransactionRepository = new Mock<ITransactionRepository>();
             var transactionRepository = mockTransactionRepository.Object;
 
-            var mockExchangeRateRepository = new Mock<IExchangeRateRepository>();
+            var mockExchangeRateRepository = new Mock<IExchangeRateService>();
             mockExchangeRateRepository.Setup(exchange => exchange.GetExchangeRate(It.IsAny<string>(), It.IsAny<string>()))
                 .ReturnsAsync(rate);
             var exchangeRateRepository = mockExchangeRateRepository.Object;
@@ -181,7 +182,7 @@ namespace ExchangeRates.Test.Domain.Services
                 .ReturnsAsync(transactions);
             var transactionRepository = mockTransactionRepository.Object;
 
-            var mockExchangeRateRepository = new Mock<IExchangeRateRepository>();            
+            var mockExchangeRateRepository = new Mock<IExchangeRateService>();            
             var exchangeRateRepository = mockExchangeRateRepository.Object;
 
             ExchangeTransactionService exchangeTransactionService = new ExchangeTransactionService(_validationService, _customValidator, transactionRepository, userRepository, exchangeRateRepository);
@@ -209,7 +210,7 @@ namespace ExchangeRates.Test.Domain.Services
                 .ReturnsAsync(new List<Transaction>());
             var transactionRepository = mockTransactionRepository.Object;
 
-            var mockExchangeRateRepository = new Mock<IExchangeRateRepository>();
+            var mockExchangeRateRepository = new Mock<IExchangeRateService>();
             var exchangeRateRepository = mockExchangeRateRepository.Object;
 
             ExchangeTransactionService exchangeTransactionService = new ExchangeTransactionService(_validationService, _customValidator, transactionRepository, userRepository, exchangeRateRepository);
@@ -235,7 +236,7 @@ namespace ExchangeRates.Test.Domain.Services
             var mockTransactionRepository = new Mock<ITransactionRepository>();
             var transactionRepository = mockTransactionRepository.Object;
 
-            var mockExchangeRateRepository = new Mock<IExchangeRateRepository>();
+            var mockExchangeRateRepository = new Mock<IExchangeRateService>();
             var exchangeRateRepository = mockExchangeRateRepository.Object;
 
             ExchangeTransactionService exchangeTransactionService = new ExchangeTransactionService(_validationService, _customValidator, transactionRepository, userRepository, exchangeRateRepository);

@@ -1,6 +1,6 @@
-﻿using ExchangeRates.Domain.Entities;
+﻿using ExchangeRates.Application.Services;
+using ExchangeRates.Domain.Entities;
 using ExchangeRates.Domain.Entities.Validations;
-using ExchangeRates.Domain.Services;
 using ExchangeRates.Domain.Validations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace ExchangeRates.Test.Domain.Validations
 {
-    [TestClass]
+   [TestClass]
     public class CreateTransactionValidationTest
     {
         private readonly ICustomValidator _customValidator;

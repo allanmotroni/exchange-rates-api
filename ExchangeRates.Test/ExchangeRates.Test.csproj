@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -17,6 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ExchangeRates.Application\ExchangeRates.Application.csproj" />
+    <ProjectReference Include="..\ExchangeRates.Common\ExchangeRates.Common.csproj" />
     <ProjectReference Include="..\ExchangeRates.Domain\ExchangeRates.Domain.csproj" />
     <ProjectReference Include="..\ExchangeRates.Infrastructure\ExchangeRates.Infrastructure.csproj" />
   </ItemGroup>

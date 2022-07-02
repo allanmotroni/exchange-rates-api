@@ -7,51 +7,55 @@ using Microsoft.Extensions.Hosting;
 
 namespace ExchangeRates.API
 {
-    public class Startup
-    {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+   public class Startup
+   {
+      public Startup(IConfiguration configuration)
+      {
+         Configuration = configuration;
+      }
 
-        public IConfiguration Configuration { get; }
+      public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddCustomSwagger();
+      public void ConfigureServices(IServiceCollection services)
+      {
+         services.AddCustomSwagger();
 
-            services.AddCustomDependecyInjections();
+         services.AddCustomDependecyInjections();
 
-            services.AddCustomDatabase(Configuration);
+         //services.AddCustomHttpClients();
 
-            services.AddCustomAutoMapper();
+         services.AddCustomDatabase(Configuration);
 
-            services.AddControllers();
+         services.AddCustomAutoMapper();
 
-            services.AddCustomKissLog(Configuration);
-        }
+         services.AddControllers();
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+         services.AddCustomKissLog(Configuration);
 
-            app.UseRouting();
+         services.AddHealthChecks();
+      }
 
-            app.UseAuthorization();
+      public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+      {
+         if (env.IsDevelopment())
+         {
+            app.UseDeveloperExceptionPage();
+         }
 
-            app.UseCustomKissLog(Configuration);
+         app.UseHealthChecks("/healthcheck");
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+         app.UseRouting();
 
-            app.UseCustomSwagger();
-        }
-    }
+         app.UseAuthorization();
+
+         app.UseCustomKissLog(Configuration);
+
+         app.UseEndpoints(endpoints =>
+         {
+            endpoints.MapControllers();
+         });
+
+         app.UseCustomSwagger();
+      }
+   }
 }

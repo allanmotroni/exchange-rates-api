@@ -1,6 +1,6 @@
-﻿using ExchangeRates.Domain.Entities;
+﻿using ExchangeRates.Application.Services;
+using ExchangeRates.Domain.Entities;
 using ExchangeRates.Domain.Interfaces.Repositories;
-using ExchangeRates.Domain.Services;
 using ExchangeRates.Domain.Validations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ExchangeRates.Test.Domain.Services
 {
-    [TestClass]
+   [TestClass]
     public class FindAllTest
     {
         private ValidationService _validationService;
