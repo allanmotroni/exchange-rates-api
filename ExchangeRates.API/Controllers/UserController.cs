@@ -4,7 +4,9 @@ using ExchangeRates.Application.Interfaces;
 using ExchangeRates.Domain.Entities;
 using ExchangeRates.Domain.Interfaces.Logger;
 using ExchangeRates.Domain.Validations;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -27,6 +29,9 @@ namespace ExchangeRates.API.Controllers
       }
 
       [HttpPost]
+      [SwaggerResponse(StatusCodes.Status201Created)]
+      [SwaggerResponse(StatusCodes.Status400BadRequest)]
+      [SwaggerResponse(StatusCodes.Status401Unauthorized)]
       public async Task<IActionResult> Post([FromBody] NewUserDto newUserDto)
       {
          try
@@ -53,6 +58,9 @@ namespace ExchangeRates.API.Controllers
 
       [HttpGet]
       [Route("email/{email}")]
+      [SwaggerResponse(StatusCodes.Status400BadRequest)]
+      [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+      [SwaggerResponse(StatusCodes.Status404NotFound)]
       public async Task<IActionResult> FindByEmail([FromHeader] int userAuthentication, string email)
       {
          try
@@ -75,6 +83,9 @@ namespace ExchangeRates.API.Controllers
       }
 
       [HttpGet]
+      [SwaggerResponse(StatusCodes.Status400BadRequest)]
+      [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+      [SwaggerResponse(StatusCodes.Status404NotFound)]
       public async Task<IActionResult> Get([FromHeader] int userAuthentication)
       {
          try
@@ -100,6 +111,9 @@ namespace ExchangeRates.API.Controllers
 
       [HttpGet]
       [Route("{id:int}")]
+      [SwaggerResponse(StatusCodes.Status400BadRequest)]
+      [SwaggerResponse(StatusCodes.Status401Unauthorized)]
+      [SwaggerResponse(StatusCodes.Status404NotFound)]
       public async Task<IActionResult> GetId([FromHeader] int userId, int id)
       {
          try
