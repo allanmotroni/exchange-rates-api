@@ -1,6 +1,5 @@
 ﻿using KissLog;
 using KissLog.AspNetCore;
-using KissLog.CloudListeners.Auth;
 using KissLog.CloudListeners.RequestLogsListener;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +11,7 @@ using System.Text;
 
 namespace ExchangeRates.API.Configuration
 {
-    public static class KissLogConfiguration
+   public static class KissLogConfiguration
     {
         public static void AddCustomKissLog(this IServiceCollection services, IConfiguration configuration)
         {
@@ -59,7 +58,7 @@ namespace ExchangeRates.API.Configuration
 
         private static void RegisterKissLogListeners(IOptionsBuilder options, IConfiguration configuration)
         {
-            options.Listeners.Add(new RequestLogsApiListener(new Application(configuration["KissLog.OrganizationId"], configuration["KissLog.ApplicationId"]))
+            options.Listeners.Add(new RequestLogsApiListener(new KissLog.CloudListeners.Auth.Application(configuration["KissLog.OrganizationId"], configuration["KissLog.ApplicationId"]))
             {
                 ApiUrl = configuration["KissLog.ApiUrl"]
             });

@@ -1,11 +1,11 @@
-﻿using ExchangeRates.Domain.Entities.Validations;
-using ExchangeRates.Domain.Services;
+﻿using ExchangeRates.Application.Services;
+using ExchangeRates.Domain.Entities.Validations;
 using ExchangeRates.Domain.Validations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ExchangeRates.Test.Domain.Validations
 {
-    [TestClass]
+   [TestClass]
     public class CustomEmailValidationTest
     {
 
