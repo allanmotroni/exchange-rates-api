@@ -7,9 +7,18 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
 
+  test:    
     runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3    
+    - name: Test
+      run: dotnet test --no-build --verbosity normal 
+  
+  build:
+    runs-on: ubuntu-latest
+    needs: test
 
     steps:
     - uses: actions/checkout@v3
@@ -19,7 +28,3 @@ jobs:
         dotnet-version: 5.0.x
     - name: Restore dependencies
       run: dotnet restore
-    - name: Build
-      run: dotnet build --no-restore
-    - name: Test
-      run: dotnet test --no-build --verbosity normal
