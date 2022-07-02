@@ -58,6 +58,7 @@ namespace ExchangeRates.API.Controllers
 
       [HttpGet]
       [Route("email/{email}")]
+      [SwaggerResponse(StatusCodes.Status200OK)]
       [SwaggerResponse(StatusCodes.Status400BadRequest)]
       [SwaggerResponse(StatusCodes.Status401Unauthorized)]
       [SwaggerResponse(StatusCodes.Status404NotFound)]
@@ -83,6 +84,7 @@ namespace ExchangeRates.API.Controllers
       }
 
       [HttpGet]
+      [SwaggerResponse(StatusCodes.Status200OK)]
       [SwaggerResponse(StatusCodes.Status400BadRequest)]
       [SwaggerResponse(StatusCodes.Status401Unauthorized)]
       [SwaggerResponse(StatusCodes.Status404NotFound)]
@@ -111,6 +113,7 @@ namespace ExchangeRates.API.Controllers
 
       [HttpGet]
       [Route("{id:int}")]
+      [SwaggerResponse(StatusCodes.Status200OK)]
       [SwaggerResponse(StatusCodes.Status400BadRequest)]
       [SwaggerResponse(StatusCodes.Status401Unauthorized)]
       [SwaggerResponse(StatusCodes.Status404NotFound)]
