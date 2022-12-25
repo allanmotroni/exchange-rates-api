@@ -11,8 +11,7 @@ jobs:
   CI:
     runs-on: ubuntu-latest
     
-    steps:
-    - name: Checkout
+    steps:    
     - uses: actions/checkout@v3
     
     - name: Setup .NET
